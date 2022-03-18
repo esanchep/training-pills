@@ -4,6 +4,7 @@ import withoptionals.aggregate.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UserCreator {
 
@@ -23,12 +24,8 @@ public class UserCreator {
     }
 
     public User addSingleFriend(final String friend) {
-        if (null == friend || "".equals(friend)) {
-            throw new IllegalArgumentException(String.format("Invalid friend %s", friend));
-        }
         User user = fakeDatabase.findUser();
-        List<String> updatedFriends = (null != user.getFriends()) ? user.getFriends() : new ArrayList<>();
-        updatedFriends = addFriend(updatedFriends, friend);
+        List<String> updatedFriends = addFriend(user.getFriends(), friend);
         User userWithFriendAdded = User.UserBuilder.of(user)
                 .friends(updatedFriends)
                 .build();
@@ -36,12 +33,11 @@ public class UserCreator {
     }
 
     public User addMultipleFriends(final List<String> friends) {
-        if (null == friends) {
-            throw new IllegalArgumentException("Friends is null");
-        }
+        List<String> definedFriends = Optional.of(friends)
+                .orElseThrow(() -> new IllegalArgumentException("Friends is null"));
         User user = fakeDatabase.findUser();
-        List<String> updatedFriends = (null != user.getFriends()) ? user.getFriends() : new ArrayList<>();
-        updatedFriends.addAll(friends);
+        List<String> updatedFriends = user.getFriends();
+        updatedFriends.addAll(definedFriends);
         User userWithFriendAdded = User.UserBuilder.of(user)
                 .friends(updatedFriends)
                 .build();
@@ -49,10 +45,8 @@ public class UserCreator {
     }
 
     private List<String> addFriend(List<String> friends, final String friend) {
-        if (friend == null) {
-            throw new IllegalArgumentException("Friend is null");
-        }
-        friends.add(friend);
+        friends.add(Optional.of(friend)
+                .orElseThrow(() -> new IllegalArgumentException("Friend is null")));
         return friends;
     }
 
