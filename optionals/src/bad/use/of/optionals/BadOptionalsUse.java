@@ -1,10 +1,11 @@
-package bad.optionals.use;
+package bad.use.of.optionals;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
+
+import static java.util.Optional.ofNullable;
 
 public class BadOptionalsUse {
 
@@ -14,10 +15,10 @@ public class BadOptionalsUse {
             doSomething(value);
         }
 
-        // The bad optionals use
+        // The ugly optionals use
         Optional<String> optionalValue = Optional.ofNullable(value);
         if (optionalValue.isPresent()) {
-            doSomething(value);
+            doSomething(optionalValue.get());
         }
 
         // Correct use of optional

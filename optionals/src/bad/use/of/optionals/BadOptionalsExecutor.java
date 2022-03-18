@@ -1,4 +1,4 @@
-package bad.optionals.use;
+package bad.use.of.optionals;
 
 public class BadOptionalsExecutor {
 
